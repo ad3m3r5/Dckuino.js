@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8" />
 
     <!-- Page style -->
@@ -12,53 +12,97 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="favicon.png" />
     <title>Duckuino</title>
-  </head>
-  <body>
-    <div class="menu">
-      <a href="https://github.com/hak5darren/USB-Rubber-Ducky/wiki/Payloads" target="_blank"><i class="fa fa-usb"></i> PayLoads list</a>
-      <a href="https://github.com/Nurrl/Duckuino" target="_blank"><i class="fa fa-github"></i> GitHub repository</a>
+</head>
+<body>
+    <div id=topbar>
+        <div class="precomp">
+            <div class="dropdown">
+                <button onclick="downpre()" class="dropbtn">Download Precompiled Scripts</button>
+                <div id="myDropdown" class="dropdown-content">
+                    <a href="premade/HelloWorld.ino" download>Hello World</a>
+                    <a href="premade/#" download>He</a>
+                    <a href="premade/#" download>premade</a>
+                    <a href="premade/#" download>premade</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="menu">
+            <a href="https://github.com/hak5darren/USB-Rubber-Ducky/wiki/Payloads" target="_blank"><i class="fa fa-usb"></i> RubberDucky Payloads</a>
+            <a href="https://github.com/ad3m3r5/dckuino.js" target="_blank"><i class="fa fa-github"></i> GitHub repository</a>
+        </div>
     </div>
 
     <div class="group">
-      <div class="part input">
-        <h1>Input</h1>
-        <h6>This is where you put the DuckyScript</h6>
-        <br>
+        
+        <div class="part input">
+            <div class="topinput">
+                <div style="float: left;width: 50%">
+                    <h1>Input</h1>
+                </div>
+                
+                <div class="process" style="float: right;width: 50%;text-align: center">
+                    <h1>Process</h1>
+                    <div class="combined-but process-but">
+                        <button id="comp" disabled>Compile !</button>
+                        <select disabled></select>
+                    </div>
+                    <div id="tag" class="tooltip">
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+            <br>
+            
+            <!-- Input textarea -->
+            <textarea id="input" placeholder="Enter DuckyScript here"></textarea>
+            <br><br>
+            <button id="clear" enabled>Clear</button>
+        </div>
+        
+        <div id="sep"></div>
+        
+        <div class="part export">
+            <h1>Export</h1>
+            <br><br><br>
 
-        <!-- Input textarea -->
-        <textarea placeholder="Enter some DuckyScript to begin :D"></textarea>
-      </div>
-      <div class="part process">
-        <div class="combined-but process-but">
-          <button disabled>Compile !</button>
-          <select disabled></select>
+            <!-- Compiled code container -->
+            <textarea id="output"></textarea>
+
+            <h4>Download Your Script</h4>
+            <div class="combined-but dl-but">
+            <textarea id="filename" placeholder="filename"></textarea>
+                <button id="down" style="transform: translateY(-14px)" disabled>Download !</button>
+                <select disabled>
+                    <option name="ino">Only .ino</option>
+                    <option name="sketch">Sketch: .ino + C files</option>
+                </select>
+            </div>
+            
         </div>
 
-        <div class="tooltip">
-          <span></span>
-        </div>
-      </div>
-      <div class="part export">
-        <h1>Export</h1>
-        <h6>Time to use !</h6>
-
-        <!-- Compiled code container -->
-        <textarea style="position: absolute; opacity: 0; top: 100%;"></textarea>
-        <!-- DevMode textarea <textarea></textarea> -->
-
-        <h4>Option 1: Download (Recommended)</h4>
-        <div class="combined-but dl-but">
-          <button disabled>Download !</button>
-          <select disabled></select>
-        </div>
-
-        <h4>Option 2: Copy/Paste</h4>
-        <button class="copy-but" disabled>Copy !</button>
-      </div>
     </div>
+    <br><br>
 
-    <!--<textarea class="console" readonly></textarea>-->
+    <script>
+        function downpre() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
 
+        // Close the dropdown if the user clicks outside of it
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
     <!-- Including libs used by the page -->
     <script src="assets/js/lib/jquery-3.1.0.min.js"></script>
     <script src="assets/js/lib/jszip-3.1.2.min.js"></script>
@@ -70,5 +114,5 @@
     <!-- Handmade js <3 -->
     <script src="Duckuino.js"></script>
     <script src="assets/js/main.js"></script>
-  </body>
+</body>
 </html>
