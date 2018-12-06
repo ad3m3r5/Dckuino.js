@@ -1,7 +1,7 @@
 # Dckuino.js
 Simple **DuckyScript** to **Arduino** converter.
 
-Improvements and changes have been made to fit my use-case. Some changes are the UI, filename (from d4n5h), removal of locale settings, and functionality bug fixes.
+Improvements and changes have been made to fit my use-case. Some changes are the UI, filename (from d4n5h), removal of locale settings, and bug fixes.
 
 Based on [Nurrl](https://nurrl.github.io/Duckuino/) and [d4n5h](https://github.com/d4n5h/Duckuino)'s improvements on the original Dckuino.js.
 
