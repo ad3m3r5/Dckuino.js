@@ -161,7 +161,8 @@ new Object({
     ALT:'KEY_LEFT_ALT',
     SHIFT:'KEY_LEFT_SHIFT',
     CTRL:'KEY_LEFT_CTRL',
-    CONTROL:'KEY_LEFT_CTRL'
+    CONTROL:'KEY_LEFT_CTRL',
+    "CTRL-SHIFT":'KEY_LEFT_CTRL);\n  Keyboard.press(KEY_LEFT_SHIFT)'
   },
 
   keyMap: { /* Normal keys */
@@ -212,19 +213,23 @@ new Object({
       toReturn = '  typeKey(' + keyArray[0] + ');\n\n';
     } else {
       for(var i = 0; i < keyArray.length; i++) {
-        toReturn += '  Keyboard.press(' + keyArray[i] + ');\n';
+        if(keyArray[i].length == 3) {
+            toReturn += ('  Keyboard.press(\'' + keyArray[i] + '\');\n').replace(/["]+/g, '');
+        } else {
+            toReturn += ('  Keyboard.press(' + keyArray[i] + ');\n');
+        }
       }
 
       toReturn += '  Keyboard.releaseAll();\n\n';
     }
 
+    //console.log(keyArray+' '+keyArray.length);
     return toReturn;
   },
 
   getFinalCode: function(compiledCode) { /* Function who returns the usable code */
     return '/**\n'
     + ' * Made with Duckuino, an open-source project.\n'
-    + ' * Check the license at \'https://github.com/Nurrl/Duckuino/blob/master/LICENSE\'\n'
     + ' */\n\n'
     + '#include "Keyboard.h"\n\n'
     + 'void typeKey(uint8_t key)\n'
