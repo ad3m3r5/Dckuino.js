@@ -22,9 +22,15 @@ $(function() { /* Wait for jQuery */
 
   /* Compile button click */
   $(".process-but button").click(function() {
+      document.getElementById("tag").style.opacity = 1;
+      
     var duckyScript = $(".input > textarea").val();
     var selectedModule = $(".process-but select").find(":selected").text();
 
+    if(duckyScript == undefined || duckyScript == '' || duckyScript == 'Enter DuckyScript here'){
+        alert('Input is invalid');
+    }
+      
     /* Load Duckuino & Compile */
     Duck.loadModule(selectedModule);
     var compilerOut = Duck.compileCode(duckyScript);
@@ -57,12 +63,7 @@ $(function() { /* Wait for jQuery */
     }
   });
 
-  /* List locales */
-  LocKey.listLocales().forEach(function (localeName) {
-    $(".dl-but select").append("<option name=\"" + localeName + "\">" + localeName + "</option>");
-  });
-
-  /* List modules */
+  /* List modules*/
   Duck.listModules().forEach(function (moduleName) {
     $(".process-but select").append("<option name=\"" + moduleName + "\">" + moduleName + "</option>");
   });
@@ -70,49 +71,61 @@ $(function() { /* Wait for jQuery */
   /* Download button */
   $(".dl-but button").click(function() {
     var compilerOut = $(".export > textarea").val();
-
-    var sketchName = "Sketch";
-    var zipHandler = new JSZip();
-
-    // Add the payload as .ino
-    zipHandler.file(sketchName + "/" + sketchName + ".ino", compilerOut);
-
-    // Add readme
-    zipHandler.file("readme", $.ajax({
-      url: 'readme.default',
-      mimeType: 'text/plain',
-      type: 'get',
-      success: function(data) {return data;}
-    }));
-
-    // Add custom version of Keyboard lib if needed
-    if ($(".export-but select").find(":selected").text() !== "en_US") {
-      // Set the locale
-      LocKey.setLocale($(".dl-but select").find(":selected").text());
-
-      // Append all to the zip
-      zipHandler.file(sketchName + "/Keyboard.cpp", LocKey.getSource());
-      zipHandler.file(sketchName + "/Keyboard.h", LocKey.getHeader());
+    var filename = $("#filename").val();
+      
+    
+    if(compilerOut == undefined || filename == undefined || compilerOut == '' || filename == '' || compilerOut == 'Error, look at the console...'){
+        alert('Payload name or code is empty!');
+        return;
     }
+    
+    if ($(".dl-but select").find(":selected").text() == "Only .ino") {
+        $("<a />", {
+            download: filename + ".ino",
+            href: URL.createObjectURL(
+                new Blob([compilerOut], {
+                    type: "text/plain"
+            }))
+        })
+        .appendTo("body")[0].click();
+        $(window).one("focus", function() {
+            $("a").last().remove()
+        })
+    }
+      
+    else if ($(".dl-but select").find(":selected").text() == "Sketch: .ino + C files") {
+        var zipHandler = new JSZip();
+        zipHandler.file(filename + "/" + filename + ".ino", compilerOut);
+        
+        zipHandler.file("readme", $.ajax({
+            url: 'readme.default',
+            mimeType: 'text/plain',
+            type: 'get',
+            success: function(data) {return data;}
+        }));
+        
+        LocKey.setLocale("en_US");
 
-    // Download
-    zipHandler.generateAsync({type:"blob"})
-      .then(function(content) {
-        saveAs(content, sketchName + ".zip");
-      }
-    );
+        // Append all to the zip
+        zipHandler.file(filename + "/Keyboard.cpp", LocKey.getSource());
+        zipHandler.file(filename + "/Keyboard.h", LocKey.getHeader());
+        
+        // Download
+        zipHandler.generateAsync({type:"blob"})
+            .then(function(content) {
+                saveAs(content, filename + ".zip");
+            }
+        );
+    }
+      
+  });
+    
+  $("#clear").click(function() {
+      document.getElementById("input").value = "";
+      document.getElementById("output").value = "";
+      document.getElementById("comp").setAttribute("disabled", true);
+      document.getElementById("down").setAttribute("disabled", true);
+      document.getElementById("tag").style.opacity = 0;
   });
 
-  /* Copy to clipboard button */
-  $(".copy-but").click(function() {
-    var copyTextarea = $(".export > textarea");
-    copyTextarea.select();
-
-    try {
-      document.execCommand('copy');
-
-      $(".copy-but").text("Copied !");
-      $(".copy-but").prop("disabled", true);
-    } catch (e) {/* Error */}
-  });
 });
